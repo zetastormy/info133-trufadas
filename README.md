@@ -1,53 +1,31 @@
-// Use DBML to define your database structure
-// Docs: https://dbml.dbdiagram.io/docs
+## Especificación base de datos 
 
-Table vendedores {
-  id_vendedor integer [primary key]
-  nombre varchar
-  correo varchar
-}
+Se requiere el diseño de una base de datos para registrar y gestionar las operaciones de ventas y compras de insumos en un negocio emergente de repostería. Este sistema permitirá llevar un control detallado de los productos comercializados, así como de los materiales necesarios para su elaboración, facilitando así la toma de decisiones basada en datos.
 
-Table hechos_ventas {
-  id_venta integer [primary key]
-  monto_total integer
-  id_cliente integer
-  fecha timestamp
-  id_vendedor integer
-  medio_pago varchar
-  id_producto integer
-  cantidad integer
-}
+Actualmente, el negocio ofrece los siguientes productos:
 
-Table clientes {
-  id_cliente integer [primary key]
-  nombre varchar
-  genero varchar
-}
+  - Trufas (Sabores: coñac, menta, ron y chocolate).
+  - Cocadas.
+  - Pan con chicharrón.
 
-Table productos{
-  id_producto integer [primary key]
-  precio integer
-  nonbre varchar
-}
+El objetivo principal de la base de datos es centralizar la información de las transacciones realizadas, tanto de ingreso (ventas de productos) como de egreso (compras de insumos), para posteriormente realizar análisis que permitan evaluar la rentabilidad, optimizar los procesos de producción, y proyectar la demanda. Para ello, se debe contar con la siguiente información:
 
-Table hechos_compras{
-  id_gasto integer [primary key]
-  id_insumo integer
-  cantidad integer
-  fecha timestamp
-}
+  - Clientes: Personas que han realizado una o más compras. Su inclusión en el sistema permitirá analizar el comportamiento de compra, establecer relaciones y ofrecer un mejor servicio. Se guardarán sus nombres y géneros.
+  - Vendedores: Encargados de efectuar las ventas. Es importante llevar un control de quién realizó cada transacción para evaluar el rendimiento individual y asignar responsabilidades. Se guardarán sus nombres y correos.
+  - Productos: Elementos disponibles para la venta. Se guardarán sus nombres y precios. 
+  - Insumos: Materiales necesarios para la preparación de los productos. Su seguimiento permitirá controlar el inventario, planificar futuras adquisiciones y calcular los costos asociados a la producción. Se guardarán sus nombres, precios y unidades de medida (1kg, 1000gr, etc).
 
-Table insumos{
-  id_insumo integer [primary key]
-  nombre varchar
-  precio integer
-  medida varchar
-}
+Esta información permitirá también gestionar las ventas, considerando los siguientes aspectos:
+  - ID de la venta: Identificador único que permite agrupar todos los productos comprados en una misma transacción.
+  - Monto total: Suma total que el cliente pagó por todos los productos adquiridos.
+  - Cliente asociado: Persona que realizó la compra.
+  - Fecha y hora: Momento exacto en que se concretó la venta.
+  - Vendedor asociado: Empleado responsable de la transacción.
+  - Medio de pago: Forma en que se efectuó el pago (efectivo, débito o transferencia).
+  - Producto adquirido: Producto incluido en la compra.
+  - Cantidad: Número de unidades compradas de dicho producto.
 
-Ref: vendedores.id_vendedor > hechos_ventas.id_vendedor // many-to-one
-
-Ref: clientes.id_cliente < hechos_ventas.id_cliente
-
-Ref: productos.id_producto< hechos_ventas.id_producto
-
-Ref: hechos_compras.id_insumo < insumos.id_insumo
+Adicionalmente, será necesario llevar el control de la reposición de insumos, para lo cual se requiere:
+  - Insumo asociado: Insumo específico que está siendo adquirido.
+  - Cantidad: Número de unidades del insumo comprado.
+  - Fecha de compra: Día en que se realizó la adquisición del insumo.
