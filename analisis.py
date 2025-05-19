@@ -7,14 +7,14 @@ import os
 DB_CONFIG = {
     'host': 'localhost',
     'port': 5432,
-    'dbname': 'trufadas',
-    'user': 'zetastormy',
+    'dbname': '',
+    'user': '',
     'password': ''
 }
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-def ventas_por_mes(cursor, año):
+def analisis_ventas_por_mes(cursor, año):
     cursor.execute("""
         SELECT DATE_TRUNC('month', fecha) AS mes, SUM(monto_total)
         FROM hechos_ventas
@@ -31,9 +31,9 @@ def ventas_por_mes(cursor, año):
     plt.xlabel('Mes')
     plt.ylabel('Monto total')
     plt.tight_layout()
-    plt.savefig(os.path.join(BASE_DIR, f"graficos/ventas_por_mes_{año}.png"))
+    plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_ventas_por_mes_{año}.png"))
 
-def ventas_por_producto(cursor, año):
+def analisis_ventas_por_producto(cursor, año):
     cursor.execute("""
         SELECT p.nombre, SUM(hv.cantidad)
         FROM hechos_ventas hv
@@ -50,9 +50,9 @@ def ventas_por_producto(cursor, año):
     plt.title(f'Ventas por producto - {año}')
     plt.xlabel('Cantidad vendida')
     plt.tight_layout()
-    plt.savefig(os.path.join(BASE_DIR, f"graficos/ventas_por_producto_{año}.png"))
+    plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_ventas_por_producto_{año}.png"))
 
-def ventas_por_vendedor(cursor, año):
+def analisis_monto_total_recaudado_por_vendedor(cursor, año):
     cursor.execute("""
         SELECT v.nombre, SUM(hv.monto_total)
         FROM hechos_ventas hv
@@ -70,9 +70,9 @@ def ventas_por_vendedor(cursor, año):
     plt.ylabel('Monto total')
     plt.xticks(rotation=45)
     plt.tight_layout()
-    plt.savefig(os.path.join(BASE_DIR, f"graficos/ventas_por_vendedor_{año}.png"))
+    plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_monto_total_recaudado_por_vendedor_{año}.png"))
 
-def compras_por_insumo(cursor, año):
+def analisis_compras_por_insumo(cursor, año):
     cursor.execute("""
         SELECT i.nombre, SUM(hc.cantidad)
         FROM hechos_compras hc
@@ -89,9 +89,9 @@ def compras_por_insumo(cursor, año):
     plt.title(f'Compras por insumo - {año}')
     plt.xlabel('Cantidad comprada')
     plt.tight_layout()
-    plt.savefig(os.path.join(BASE_DIR, f"graficos/compras_por_insumo_{año}.png"))
+    plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_compras_por_insumo_{año}.png"))
 
-def metodos_de_pago(cursor, año):
+def analisis_porcentaje_metodos_de_pago(cursor, año):
     cursor.execute("""
         SELECT medio_pago, COUNT(*)
         FROM hechos_ventas
@@ -106,9 +106,9 @@ def metodos_de_pago(cursor, año):
     plt.pie(cantidad, labels=medios, autopct='%1.1f%%', startangle=140)
     plt.title(f'Métodos de pago - {año}')
     plt.tight_layout()
-    plt.savefig(os.path.join(BASE_DIR, f"graficos/metodos_de_pago_{año}.png"))
+    plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_porcentaje_metodos_de_pago_{año}.png"))
 
-def dias_con_mas_ventas(cursor, año):
+def analisis_dias_con_mas_ventas(cursor, año):
     cursor.execute("""
         SELECT DATE(fecha) AS dia, COUNT(DISTINCT id_venta) AS total_ventas
         FROM hechos_ventas
@@ -125,7 +125,7 @@ def dias_con_mas_ventas(cursor, año):
     plt.title(f'Días con más ventas - Top 10 - {año}')
     plt.xlabel('Cantidad de ventas')
     plt.tight_layout()
-    plt.savefig(os.path.join(BASE_DIR, f"graficos/dias_con_mas_ventas_{año}.png"))
+    plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_10_dias_con_mas_ventas_{año}.png"))
 
 def main():
     if len(sys.argv) != 2:
@@ -141,12 +141,12 @@ def main():
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
 
-        ventas_por_mes(cursor, año)
-        ventas_por_producto(cursor, año)
-        ventas_por_vendedor(cursor, año)
-        compras_por_insumo(cursor, año)
-        metodos_de_pago(cursor, año)
-        dias_con_mas_ventas(cursor, año)
+        analisis_ventas_por_mes(cursor, año)
+        analisis_ventas_por_producto(cursor, año)
+        analisis_ventas_por_vendedor(cursor, año)
+        analisis_compras_por_insumo(cursor, año)
+        analisis_porcentaje_metodos_de_pago(cursor, año)
+        analisis_dias_con_mas_ventas(cursor, año)
 
         print("Gráficos generados correctamente.")
 
