@@ -1,3 +1,7 @@
+## ¿Cómo usar?
+
+Para generar las tablas de la base de datos, referirse al archivo `tables.sql`
+
 ## Especificación base de datos 
 
 Se requiere el diseño de una base de datos para registrar y gestionar las operaciones de ventas y compras de insumos en un negocio emergente de repostería. Este sistema permitirá llevar un control detallado de los productos comercializados, así como de los materiales necesarios para su elaboración, facilitando así la toma de decisiones basada en datos.
