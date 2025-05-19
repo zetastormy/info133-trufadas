@@ -1,6 +1,21 @@
-## ¿Cómo usar?
+## ¿Cómo utilizar el programa?
 
-Para generar las tablas de la base de datos, referirse al archivo `tables.sql`
+Para generar las tablas de la base de datos, referirse al archivo `tables.sql`. Posteriormente para rellenar la base de datos recién creada, puede ejecutar el script `generar_datos.py`, el cual creará datos en un lapso de 4 años a partir de la fecha de hoy hacia atrás. Genera 50 clientes y 4 vendedores, realizando un total de 500 ventas y 30 reposiciones de insumos. Además, se insertarán los datos de productos e insumos que son realmente usados en el negocio en la realidad.
+
+Finalmente, para realizar el análisis de los datos ejecute el script `analisis.py` de la siguiente manera:
+
+```sh
+python analisis.py <año>
+```
+
+Este script creará los 6 gráficos siguientes:
+
+- Las compras por insumo
+- Los 10 días con más ventas del año
+- Proporción de métodos de pago usados durante el año
+- Las ventas por cada mes del año
+- Las ventas por producto
+- Las ventas por vendedor
 
 ## Especificación base de datos 
 

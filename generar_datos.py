@@ -14,6 +14,62 @@ conn = psycopg2.connect(
 
 cursor = conn.cursor()
 
+productos = [
+    ('Trufa coñac', 500),
+    ('Trufa ron', 500),
+    ('Trufa menta', 500),
+    ('Trufa chocolate', 500),
+    ('Cocadas con maní', 500),
+    ('Cocadas', 500),
+    ('Pan con chicharrón', 1200),
+]
+
+insumos = [
+    ('Crema', 2500, '200 mL'),
+    ('Chocolate Semibutter', 6500, '1 kg'),
+    ('Galletas Vino', 1200, '160 g'),
+    ('Esencia coñac', 2300, '25 g'),
+    ('Esencia ron', 2300, '25 g'),
+    ('Esencia menta', 2300, '25 g'),
+    ('Maní', 3890, '1 kg'),
+    ('Coco Rayado', 11800, '1 kg'),
+    ('Manjar Nestlé', 3590, '1 kg'),
+    ('Harina sin polvos de hornear', 1700, '1 kg'),
+    ('Levadura', 800, '250 g'),
+    ('Sal', 450, '1 kg'),
+    ('Huevos caja', 47000, '180 u'),
+    ('Aceite', 2000, '1 L'),
+    ('Chicharrón Hecho', 10500, '1 kg'),
+    ('Manteca', 4000, '1 kg'),
+    ('Bolsas PP 10 cm x 15 cm', 700, '100 u'),
+]
+
+# Insertar productos
+for nombre, precio in productos:
+    cursor.execute("""
+        INSERT INTO productos (nombre, precio)
+        VALUES (%s, %s)
+    """, (nombre, precio))
+
+# Insertar insumos
+for nombre, precio, medida in insumos:
+    cursor.execute("""
+        INSERT INTO insumos (nombre, precio, medida)
+        VALUES (%s, %s, %s)
+    """, (nombre, precio, medida))
+
+# Insertar clientes
+for _ in range(50):
+    nombre = fake.first_name()
+    genero = random.choice(["M", "F"])
+    cursor.execute("INSERT INTO clientes (nombre, genero) VALUES (%s, %s)", (nombre, genero))
+
+# Insertar vendedores
+for _ in range(4):
+    nombre = fake.name()
+    correo = fake.email()
+    cursor.execute("INSERT INTO vendedores (nombre, correo) VALUES (%s, %s)", (nombre, correo))
+
 # Obtener datos existentes
 cursor.execute("SELECT id_cliente FROM clientes")
 clientes = [x[0] for x in cursor.fetchall()]

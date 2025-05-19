@@ -134,6 +134,9 @@ def main():
 
     año = int(sys.argv[1])
 
+    if not os.path.exists(os.path.join(BASE_DIR, "graficos")):
+        os.mkdir(os.path.join(BASE_DIR, "graficos"))
+
     try:
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
