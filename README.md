@@ -34,6 +34,7 @@ El objetivo principal de la base de datos es centralizar la información de las 
   - Productos: Elementos disponibles para la venta. Se guardarán sus nombres y precios. 
   - Insumos: Materiales necesarios para la preparación de los productos. Su seguimiento permitirá controlar el inventario, planificar futuras adquisiciones y calcular los costos asociados a la producción. Se guardarán sus nombres, precios y unidades de medida (1kg, 1000gr, etc).
 
+
 Esta información permitirá también gestionar las ventas, considerando los siguientes aspectos:
   - ID de la venta: Identificador único que permite agrupar todos los productos comprados en una misma transacción.
   - Monto total: Suma total que el cliente pagó por todos los productos adquiridos.
