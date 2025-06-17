@@ -2,8 +2,12 @@ import FreeSimpleGUI as sg
 import psycopg2
 import random
 from faker import Faker
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
-# TODO: Cambiar por tablas de base de datos relacional.
+sg.theme('SandyBeach')
+fake = Faker("es_CL")
+
 def load_test_data(cursor):
     productos = [
         ('Trufa coñac', 500),
@@ -37,82 +41,80 @@ def load_test_data(cursor):
 
     # Insertar productos
     for nombre, precio in productos:
-        cursor.execute("""
-            INSERT INTO productos (nombre, precio)
-            VALUES (%s, %s)
-        """, (nombre, precio))
+        cursor.execute("INSERT INTO producto (nombre, precio) VALUES (%s, %s)", (nombre, precio))
 
     # Insertar insumos
     for nombre, precio, medida in insumos:
-        cursor.execute("""
-            INSERT INTO insumos (nombre, precio, medida)
-            VALUES (%s, %s, %s)
-        """, (nombre, precio, medida))
+        cursor.execute("INSERT INTO insumo (nombre, precio, unidad_medida) VALUES (%s, %s, %s)", (nombre, precio, medida))
 
     # Insertar clientes
-    for _ in range(50):
+    for _ in range(150):
         nombre = fake.first_name()
         genero = random.choice(["M", "F"])
-        cursor.execute("INSERT INTO clientes (nombre, genero) VALUES (%s, %s)", (nombre, genero))
+        cursor.execute("INSERT INTO cliente (nombre, genero) VALUES (%s, %s)", (nombre, genero))
 
     # Insertar vendedores
-    for _ in range(4):
+    for _ in range(12):
         nombre = fake.name()
         correo = fake.email()
-        cursor.execute("INSERT INTO vendedores (nombre, correo) VALUES (%s, %s)", (nombre, correo))
+        cursor.execute("INSERT INTO vendedor (nombre, correo) VALUES (%s, %s)", (nombre, correo))
 
-    # Obtener datos existentes
-    cursor.execute("SELECT id_cliente FROM clientes")
+    # Obtener IDs
+    cursor.execute("SELECT id_cliente FROM cliente")
     clientes = [x[0] for x in cursor.fetchall()]
 
-    cursor.execute("SELECT id_vendedor FROM vendedores")
+    cursor.execute("SELECT id_vendedor FROM vendedor")
     vendedores = [x[0] for x in cursor.fetchall()]
 
-    cursor.execute("SELECT id_producto, nombre, precio FROM productos")
+    cursor.execute("SELECT id_producto, precio FROM producto")
     productos = cursor.fetchall()
 
     medios_pago = ["Efectivo", "Débito", "Transferencia"]
 
-    def es_combo(nombre):
-        return 'trufa' in nombre.lower() or 'cocada' in nombre.lower()
+    start = datetime.now() - relativedelta(years=3)
+    end = datetime.now()
+    current = start.replace(day=1)
 
-    for venta_id in range(1, 501):
-        cliente = random.choice(clientes)
-        vendedor = random.choice(vendedores)
-        fecha = fake.date_time_between(start_date='-4y', end_date='now')
-        medio = random.choice(medios_pago)
+    while current <= end:
+        for _ in range(500):
+            fecha = current + timedelta(days=random.randint(0, 27), hours=random.randint(8, 20), minutes=random.randint(0, 59))
+            cliente = random.choice(clientes)
+            vendedor = random.choice(vendedores)
+            medio = random.choice(medios_pago)
 
-        if random.random() < 0.5:
-            combos = [p for p in productos if es_combo(p[1])]
-            if len(combos) >= 3:
-                elegidos = random.sample(combos, 3)
-                for pid, _, _ in elegidos:
-                    cursor.execute("""
-                        INSERT INTO hechos_ventas (id_venta, monto_total, id_cliente, fecha, id_vendedor, medio_pago, id_producto, cantidad)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                    """, (venta_id, 400, cliente, fecha, vendedor, medio, pid, 1))
-        else:
-            elegidos = random.sample(productos, random.randint(1, 3))
-            for pid, _, precio in elegidos:
+            cursor.execute(
+                "INSERT INTO venta (monto, medio_pago, fecha, id_vendedor, id_cliente) VALUES (%s, %s, %s, %s, %s) RETURNING id_venta",
+                (0, medio, fecha, vendedor, cliente)
+            )
+            id_venta = cursor.fetchone()[0]
+
+            total = 0
+            productos_elegidos = random.sample(productos, random.randint(1, 3))
+            for prod_id, precio in productos_elegidos:
                 cantidad = random.randint(1, 3)
-                total = cantidad * precio
-                cursor.execute("""
-                    INSERT INTO hechos_ventas (id_venta, monto_total, id_cliente, fecha, id_vendedor, medio_pago, id_producto, cantidad)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """, (venta_id, total, cliente, fecha, vendedor, medio, pid, cantidad))
+                total += cantidad * precio
+                cursor.execute(
+                    "INSERT INTO vender (id_venta, id_producto, cantidad) VALUES (%s, %s, %s)",
+                    (id_venta, prod_id, cantidad)
+                )
 
-    # Insertar hechos_compras si hay insumos
-    cursor.execute("SELECT id_insumo FROM insumos")
-    insumos = [x[0] for x in cursor.fetchall()]
+            # Actualizar monto total
+            cursor.execute("UPDATE venta SET monto = %s WHERE id_venta = %s", (total, id_venta))
 
-    for _ in range(30):
-        insumo = random.choice(insumos)
-        cantidad = random.randint(100, 1000)
-        fecha = fake.date_time_between(start_date='-4y', end_date='now')
+        current += relativedelta(months=1)
+
+    # Reposiciones insumos (150 en total)
+    cursor.execute("SELECT id_insumo FROM insumo")
+    insumo_ids = [x[0] for x in cursor.fetchall()]
+
+    for _ in range(150):
+        insumo = random.choice(insumo_ids)
+        cantidad = random.randint(50, 1000)
+        fecha = fake.date_time_between(start_date='-3y', end_date='now')
         cursor.execute("""
-            INSERT INTO hechos_compras (id_insumo, cantidad, fecha)
+            INSERT INTO reposicion_insumo (id_insumo, fecha, cantidad)
             VALUES (%s, %s, %s)
-        """, (insumo, cantidad, fecha))
+        """, (insumo, fecha, cantidad))
 
 def create_main_window():
     buttons = ["Ingresar venta", 
@@ -139,13 +141,10 @@ def create_main_window():
     return mainWindow
 
 def main():
-    sg.theme('SandyBeach')
-    fake = Faker("es_CL")
-
     conn = psycopg2.connect(
         host='localhost',
         port=5432,
-        dbname='trufadas',
+        dbname='trufadas_transaccional',
         user='zetastormy',
         password=''
     )
@@ -155,7 +154,14 @@ def main():
 
     while True:
         event, values = mainWindow.read()
-
+        
+        if event == "Cargar datos de prueba":
+            try:
+                load_test_data(cursor)
+                sg.popup(f"¡Se han insertado los datos de prueba correctamente!")
+            except Exception as e:
+                sg.popup(f"Ocurrió el siguiente error: {e}");
+            
         if event in (sg.WINDOW_CLOSED, "Salir"):
             break
 
