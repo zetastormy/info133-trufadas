@@ -44,6 +44,11 @@ def load_test_data(cursor):
         ('Bolsas PP 10 cm x 15 cm', 700, '100 u'),
     ]
 
+    with open("tables.sql", "r", encoding="utf-8") as f:
+        tables_script = f.read()
+
+    cursor.execute(tables_script)
+
     # Insertar productos
     for nombre, precio in productos:
         cursor.execute("INSERT INTO producto (nombre, precio) VALUES (%s, %s)", (nombre, precio))
@@ -234,8 +239,11 @@ def main():
             if cursor == None:
                 sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
                 continue
-
-            create_ingresar_ventas_window(cursor, conn)
+            
+            try:
+                create_ingresar_ventas_window(cursor, conn)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Cargar datos de prueba":
             dataWindow = create_data_window(prefill_env_values())
