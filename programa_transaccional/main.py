@@ -223,7 +223,7 @@ def main():
         try:
             sg.popup("¡Se ha conectado correctamente a la base de datos anteriormente especificada!")
         except Exception as e:
-            sg.popup_error("Error al conectarse a la base de datos de .env:", str(e))
+            sg.popup("Error al conectarse a la base de datos de .env:", str(e))
     
     mainWindow = create_main_window()
 
@@ -231,6 +231,10 @@ def main():
         event, values = mainWindow.read()
 
         if event == "Ingresar venta":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+
             create_ingresar_ventas_window(cursor, conn)
 
         if event == "Cargar datos de prueba":
