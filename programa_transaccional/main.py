@@ -11,7 +11,8 @@ from ventas import create_ingresar_ventas_window
 sg.theme('SandyBeach')
 fake = Faker("es_CL")
 
-ENV_PATH = ".env"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENV_PATH = os.path.join(BASE_DIR, ".env")
 
 def load_test_data(cursor):
     productos = [
@@ -44,7 +45,7 @@ def load_test_data(cursor):
         ('Bolsas PP 10 cm x 15 cm', 700, '100 u'),
     ]
 
-    with open("tables.sql", "r", encoding="utf-8") as f:
+    with open(os.path.join(BASE_DIR, "tables.sql"), "r", encoding="utf-8") as f:
         tables_script = f.read()
 
     cursor.execute(tables_script)
@@ -139,7 +140,7 @@ def load_env():
     return None
 
 def save_env(host, port, dbname, user, password):
-    with open('.env', 'w') as f:
+    with open(ENV_PATH, 'w') as f:
         f.write(f"DB_HOST={host}\n")
         f.write(f"DB_PORT={port}\n")
         f.write(f"DB_NAME={dbname}\n")
@@ -255,9 +256,11 @@ def main():
                         conn = connect_from_env()
                         if conn:
                             cursor = conn.cursor()
+
+                            sg.popup_no_buttons("Por favor, espere unos segundos a que se carguen los datos.", auto_close=True, auto_close_duration=5)
                             load_test_data(cursor)
                             conn.commit()
-                            sg.popup("¡Se han insertado los datos de prueba correctamente!")
+                            sg.popup_no_buttons("¡Se han insertado los datos de prueba correctamente!", auto_close=True, auto_close_duration=5)
                         else:
                             sg.popup_error("No se pudo establecer la conexión.")
                     except Exception as e:
