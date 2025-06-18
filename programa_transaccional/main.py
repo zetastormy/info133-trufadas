@@ -129,7 +129,8 @@ def load_test_data(cursor):
 
 def load_env():
     if os.path.exists(ENV_PATH):
-        load_dotenv(ENV_PATH)
+        load_dotenv(ENV_PATH, override=True)
+
         return {
             "host": os.getenv("HOST"),
             "port": os.getenv("PORT"),
@@ -254,13 +255,14 @@ def main():
                     try:
                         save_env(values_data["HOST"], values_data["PORT"], values_data["DB_NAME"], values_data["DB_USER"], values_data["DB_PASSWORD"])
                         conn = connect_from_env()
+
                         if conn:
                             cursor = conn.cursor()
 
-                            sg.popup_no_buttons("Por favor, espere unos segundos a que se carguen los datos.", auto_close=True, auto_close_duration=5)
+                            sg.popup_no_buttons("Por favor, espere unos segundos a que se carguen los datos.", auto_close=True, auto_close_duration=3)
                             load_test_data(cursor)
                             conn.commit()
-                            sg.popup_no_buttons("¡Se han insertado los datos de prueba correctamente!", auto_close=True, auto_close_duration=5)
+                            sg.popup_no_buttons("¡Se han insertado los datos de prueba correctamente!", auto_close=True, auto_close_duration=3)
                         else:
                             sg.popup_error("No se pudo establecer la conexión.")
                     except Exception as e:
