@@ -73,6 +73,12 @@ def create_modificar_producto_window(cursor, conn):
         if event == "Actualizar":
             try:
                 pid = int(values["ID"])
+
+                cursor.execute("SELECT 1 FROM producto WHERE id_producto = %s AND borrado = FALSE", (pid,))
+                if cursor.fetchone() is None:
+                    sg.popup_error("El producto no existe")
+                    continue
+
                 nombre = values["NOMBRE"].strip()
                 precio = values["PRECIO"].strip()
                 campos = []
@@ -115,6 +121,12 @@ def create_eliminar_producto_window(cursor, conn):
         if event == "Eliminar":
             try:
                 pid = int(values["ID"])
+
+                cursor.execute("SELECT 1 FROM producto WHERE id_producto = %s AND borrado = FALSE", (pid,))
+                if cursor.fetchone() is None:
+                    sg.popup_error("El producto no existe")
+                    continue
+
                 cursor.execute("UPDATE producto SET borrado = TRUE WHERE id_producto = %s", (pid,))
                 conn.commit()
                 sg.popup("Producto eliminado correctamente")
