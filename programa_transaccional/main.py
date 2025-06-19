@@ -7,6 +7,7 @@ from dateutil.relativedelta import relativedelta
 from dotenv import load_dotenv
 import os
 from ventas import create_ingresar_ventas_window
+from productos import *
 
 sg.theme('SandyBeach')
 fake = Faker("es_CL")
@@ -244,6 +245,46 @@ def main():
             
             try:
                 create_ingresar_ventas_window(cursor, conn)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
+
+        if event == "Ingresar producto":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_ingresar_producto_window(cursor, conn)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
+
+        if event == "Listar productos":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_listar_productos_window(cursor)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
+
+        if event == "Modificar producto":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_modificar_producto_window(cursor, conn)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")            
+        
+        if event == "Eliminar producto":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_eliminar_producto_window(cursor, conn)
             except Exception as e:
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 

@@ -7,7 +7,8 @@ CREATE TABLE "vendedor" (
 CREATE TABLE "producto" (
   "id_producto" SERIAL PRIMARY KEY,
   "nombre" VARCHAR,
-  "precio" INTEGER
+  "precio" INTEGER,
+  "borrado" BOOLEAN DEFAULT FALSE
 );
 
 CREATE TABLE "cliente" (
