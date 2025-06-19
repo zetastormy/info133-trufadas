@@ -1,0 +1,8 @@
+dotenv==0.9.9
+Faker==37.4.0
+FreeSimpleGUI==5.2.0.post1
+psycopg2==2.9.10
+python-dateutil==2.9.0.post0
+python-dotenv==1.1.0
+six==1.17.0
+tzdata==2025.2
