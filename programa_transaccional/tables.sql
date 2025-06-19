@@ -39,6 +39,7 @@ CREATE TABLE "venta" (
 	"fecha" TIMESTAMP,
 	"id_vendedor" INTEGER,
 	"id_cliente" INTEGER,
+  "borrado" BOOLEAN DEFAULT FALSE,
 	CONSTRAINT fk_vendedor FOREIGN KEY (id_vendedor) REFERENCES vendedor(id_vendedor),
 	CONSTRAINT fk_cliente FOREIGN KEY (id_cliente) REFERENCES cliente(id_cliente) 
 );
@@ -47,6 +48,7 @@ CREATE TABLE "vender" (
 	"id_venta" INTEGER,
 	"id_producto" INTEGER,
 	"cantidad" INTEGER,
+  "borrado" BOOLEAN DEFAULT FALSE,
 	CONSTRAINT fk_venta FOREIGN KEY (id_venta) REFERENCES venta(id_venta),
 	CONSTRAINT fk_producto FOREIGN KEY (id_producto) REFERENCES producto(id_producto),
 	PRIMARY KEY (id_venta, id_producto)

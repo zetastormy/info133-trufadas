@@ -1,13 +1,13 @@
+from faker import Faker
+from dateutil.relativedelta import relativedelta
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+from ventas import *
+from productos import *
 import FreeSimpleGUI as sg
 import psycopg2
 import random
-from faker import Faker
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-from dotenv import load_dotenv
 import os
-from ventas import create_ingresar_ventas_window
-from productos import *
 
 sg.theme('SandyBeach')
 fake = Faker("es_CL")
@@ -245,6 +245,37 @@ def main():
             
             try:
                 create_ingresar_ventas_window(cursor, conn)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
+
+        if event == "Listar ventas":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_listar_ventas_window(cursor)
+            except Exception as e:
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
+
+        if event == "Modificar venta":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_modificar_venta_window(cursor, conn)
+            except Exception as e:
+                print(e)
+                sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
+
+        if event == "Eliminar venta":
+            if cursor == None:
+                sg.popup("¡Debe especificar su base de datos previamente en el botón \"Cargar datos de prueba\"!")
+                continue
+            
+            try:
+                create_eliminar_venta_window(cursor, conn)
             except Exception as e:
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
