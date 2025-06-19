@@ -2,6 +2,12 @@ import FreeSimpleGUI as sg
 from datetime import datetime
 
 def create_ingresar_ventas_window(cursor, conn):
+    cursor.execute("SELECT * FROM venta")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     cursor.execute("SELECT id_vendedor, nombre FROM vendedor")
     vendedores = cursor.fetchall()
     vendedores_list = [f"{id} - {nombre}" for id , nombre in vendedores]
@@ -106,6 +112,12 @@ def create_ingresar_ventas_window(cursor, conn):
     resultWindow.close()
 
 def create_listar_ventas_window(cursor):
+    cursor.execute("SELECT * FROM venta")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     cursor.execute("""
         SELECT v.id_venta, v.monto, v.medio_pago, v.fecha, c.nombre AS cliente, vd.nombre AS vendedor
         FROM venta v
@@ -145,6 +157,12 @@ def create_listar_ventas_window(cursor):
     window.close()
 
 def create_modificar_venta_window(cursor, conn):
+    cursor.execute("SELECT * FROM venta")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     def get_product_row(productos_list, key_suffix, selected=None, cantidad=""):
         return [
             sg.Combo(productos_list, key=f"PRODUCTO_{key_suffix}", readonly=True, default_value=selected, size=(25, 1)),
@@ -272,6 +290,12 @@ def create_modificar_venta_window(cursor, conn):
     window.close()
 
 def create_eliminar_venta_window(cursor, conn):
+    cursor.execute("SELECT * FROM venta")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     layout = [
         [sg.Text("Eliminar Venta", font="Any 12 bold")],
         [sg.Text("Ingrese ID de la venta a eliminar:", font="Any 10 bold")],

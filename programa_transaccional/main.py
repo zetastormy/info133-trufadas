@@ -246,6 +246,7 @@ def main():
             try:
                 create_ingresar_ventas_window(cursor, conn)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Listar ventas":
@@ -256,6 +257,7 @@ def main():
             try:
                 create_listar_ventas_window(cursor)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Modificar venta":
@@ -266,7 +268,7 @@ def main():
             try:
                 create_modificar_venta_window(cursor, conn)
             except Exception as e:
-                print(e)
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Eliminar venta":
@@ -277,6 +279,7 @@ def main():
             try:
                 create_eliminar_venta_window(cursor, conn)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Ingresar producto":
@@ -287,6 +290,7 @@ def main():
             try:
                 create_ingresar_producto_window(cursor, conn)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Listar productos":
@@ -297,6 +301,7 @@ def main():
             try:
                 create_listar_productos_window(cursor)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Modificar producto":
@@ -307,6 +312,7 @@ def main():
             try:
                 create_modificar_producto_window(cursor, conn)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")            
         
         if event == "Eliminar producto":
@@ -317,6 +323,7 @@ def main():
             try:
                 create_eliminar_producto_window(cursor, conn)
             except Exception as e:
+                conn.rollback()
                 sg.popup("¡Debe crear datos de prueba antes de usar esta función!")
 
         if event == "Cargar datos de prueba":

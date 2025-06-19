@@ -1,6 +1,12 @@
 import FreeSimpleGUI as sg
 
 def create_ingresar_producto_window(cursor, conn):
+    cursor.execute("SELECT * FROM producto")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     layout = [
         [sg.Text("Ingresar producto", font="Any 12 bold")],
         [sg.Text("Nombre:")],
@@ -33,6 +39,12 @@ def create_ingresar_producto_window(cursor, conn):
     window.close()
 
 def create_listar_productos_window(cursor):
+    cursor.execute("SELECT * FROM producto")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     cursor.execute("SELECT id_producto, nombre, precio FROM producto WHERE NOT borrado")
     productos = cursor.fetchall()
     data = [[str(p[0]), p[1], str(p[2])] for p in productos]
@@ -53,6 +65,12 @@ def create_listar_productos_window(cursor):
     window.close()
 
 def create_modificar_producto_window(cursor, conn):
+    cursor.execute("SELECT * FROM producto")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     layout = [
         [sg.Text("Modificar producto", font="Any 12 bold")],
         [sg.Text("ID del producto a modificar:"), sg.Input(key="ID")],
@@ -105,6 +123,12 @@ def create_modificar_producto_window(cursor, conn):
     window.close()
 
 def create_eliminar_producto_window(cursor, conn):
+    cursor.execute("SELECT * FROM producto")
+    
+    if cursor.fetchone() is None:
+        raise Exception
+        return
+
     layout = [
         [sg.Text("Eliminar producto", font="Any 12 bold")],
         [sg.Text("Ingrese ID del producto a eliminar:"), sg.Input(key="ID")],
