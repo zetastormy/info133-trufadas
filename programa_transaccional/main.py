@@ -133,8 +133,8 @@ def load_env():
         load_dotenv(ENV_PATH, override=True)
 
         return {
-            "host": os.getenv("HOST"),
-            "port": os.getenv("PORT"),
+            "host": os.getenv("DB_HOST"),
+            "port": os.getenv("DB_PORT"),
             "dbname": os.getenv("DB_NAME"),
             "user": os.getenv("DB_USER"),
             "password": os.getenv("DB_PASSWORD")
@@ -169,8 +169,8 @@ def prefill_env_values():
     config = load_env()
     if config:
         return {
-            'HOST': config['host'],
-            'PORT': config['port'],
+            'DB_HOST': config['host'],
+            'DB_PORT': config['port'],
             'DB_NAME': config['dbname'],
             'DB_USER': config['user'],
             'DB_PASSWORD': config['password']
@@ -205,10 +205,10 @@ def create_data_window(prefilled_values=None):
 
     layout = [
         [sg.Text("Ingrese host:", font="Any 10 bold")],
-        [sg.InputText(default_text=prefilled_values.get('HOST', ''), key='HOST')],
+        [sg.InputText(default_text=prefilled_values.get('DB_HOST', ''), key='HOST')],
         
         [sg.Text("Ingrese puerto:", font="Any 10 bold")],
-        [sg.InputText(default_text=prefilled_values.get('PORT', ''), key='PORT')],
+        [sg.InputText(default_text=prefilled_values.get('DB_PORT', ''), key='PORT')],
         
         [sg.Text("Ingrese nombre base de datos:", font="Any 10 bold")],
         [sg.InputText(default_text=prefilled_values.get('DB_NAME', ''), key='DB_NAME')],

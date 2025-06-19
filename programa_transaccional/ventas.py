@@ -265,17 +265,14 @@ def create_modificar_venta_window(cursor, conn):
                 continue
 
             try:
-                # Eliminar los productos anteriores
                 cursor.execute("DELETE FROM vender WHERE id_venta = %s", (id_venta,))
 
-                # Insertar los nuevos productos
                 for id_prod, cantidad in nuevos_productos:
                     cursor.execute("""
                         INSERT INTO vender (id_venta, id_producto, cantidad)
                         VALUES (%s, %s, %s)
                     """, (id_venta, id_prod, cantidad))
 
-                # Actualizar la venta
                 cursor.execute("""
                     UPDATE venta SET monto=%s, medio_pago=%s, fecha=%s WHERE id_venta=%s
                 """, (monto_total, values['METODO'], fecha, id_venta))
