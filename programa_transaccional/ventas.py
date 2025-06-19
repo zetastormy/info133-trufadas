@@ -193,6 +193,9 @@ def create_modificar_venta_window(cursor, conn):
             break
 
         if event == "Cargar Venta":
+            if venta_loaded:
+                continue
+
             if not values["ID_VENTA"].isdigit():
                 sg.popup_error("El ID de venta debe ser un número.")
                 continue
