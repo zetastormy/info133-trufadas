@@ -7,8 +7,8 @@ import os
 DB_CONFIG = {
     'host': 'localhost',
     'port': 5432,
-    'dbname': '',
-    'user': '',
+    'dbname': 'trufadas',
+    'user': 'zetastormy',
     'password': ''
 }
 
@@ -143,7 +143,7 @@ def main():
 
         analisis_ventas_por_mes(cursor, año)
         analisis_ventas_por_producto(cursor, año)
-        analisis_ventas_por_vendedor(cursor, año)
+        analisis_monto_total_recaudado_por_vendedor(cursor, año)
         analisis_compras_por_insumo(cursor, año)
         analisis_porcentaje_metodos_de_pago(cursor, año)
         analisis_dias_con_mas_ventas(cursor, año)
