@@ -29,7 +29,7 @@ def analisis_ventas_por_mes(cursor, año):
     plt.plot(meses, totales, color='red')
     plt.title(f'Ventas por mes - {año}')
     plt.xlabel('Mes')
-    plt.ylabel('Monto total')
+    plt.ylabel('Monto total ($)')
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_ventas_por_mes_{año}.png"))
 
@@ -48,7 +48,8 @@ def analisis_ventas_por_producto(cursor, año):
     plt.figure(figsize=(10,5))
     plt.barh(productos, cantidades, color='orange')
     plt.title(f'Ventas por producto - {año}')
-    plt.xlabel('Cantidad vendida')
+    plt.xlabel('Cantidad vendida (unidad)')
+    plt.ylabel('Producto')
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_ventas_por_producto_{año}.png"))
 
@@ -67,7 +68,8 @@ def analisis_monto_total_recaudado_por_vendedor(cursor, año):
     plt.figure()
     plt.bar(nombres, montos, color='green')
     plt.title(f'Ventas por vendedor - {año}')
-    plt.ylabel('Monto total')
+    plt.xlabel('Vendedor')
+    plt.ylabel('Monto total ($)')
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_monto_total_recaudado_por_vendedor_{año}.png"))
@@ -87,7 +89,8 @@ def analisis_compras_por_insumo(cursor, año):
     plt.figure(figsize=(10,5))
     plt.barh(insumos, cantidades, color='purple')
     plt.title(f'Compras por insumo - {año}')
-    plt.xlabel('Cantidad comprada')
+    plt.xlabel('Cantidad comprada (unidad)')
+    plt.ylabel('Insumo')
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_compras_por_insumo_{año}.png"))
 
@@ -124,6 +127,7 @@ def analisis_dias_con_mas_ventas(cursor, año):
     plt.barh(dias[::-1], cantidades[::-1], color='teal') 
     plt.title(f'Días con más ventas - Top 10 - {año}')
     plt.xlabel('Cantidad de ventas')
+    plt.ylabel('Fecha')
     plt.tight_layout()
     plt.savefig(os.path.join(BASE_DIR, f"graficos/analisis_10_dias_con_mas_ventas_{año}.png"))
 
